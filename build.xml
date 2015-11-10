@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Auto generate bean" basedir="." default="jar">
+
+	<property name="output_dir" value="dist" />
+	<property name="include_files" value="vn/iadd/autobean/**/*.class" />
+	<property name="main_class" value="vn.iadd.autobean.Main" />
+	<property name="file_name" value="auto_bean.jar" />
+	<property name="lib_file" value="all_lib.jar" />
+	<property name="lib_dir" value="lib" />
+
+	<tstamp>
+		<format property="NOW" pattern="yyyy-MM-dd HH:mm:ss" locale="vi,VN" />
+	</tstamp>
+
+	<target name="jar" depends="clean, build, copy-dependencies">
+		<jar destfile="${output_dir}/${file_name}">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Ant-Version" value="${ant.version}" />
+				<attribute name="OS" value="${os.name} - ${os.version}" />
+
+				<attribute name="Created-Time" value="${NOW}" />
+				<attribute name="Created-By" value="${user.name}" />
+				<attribute name="Main-Class" value="${main_class}" />
+				<!--<attribute name="Class-Path" value="." />-->
+			</manifest>
+			<fileset dir="bin" includes="${include_files}" />
+			<!--<fileset dir="lib" includes="**/*.jar" />-->
+			<zipfileset src="${output_dir}/${lib_dir}/${lib_file}" excludes="META-INF/*.SF" />
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${output_dir}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${output_dir}" />
+	</target>
+
+	<target name="copy-dependencies">
+		<jar jarfile="${output_dir}/${lib_dir}/${lib_file}">
+			<zipgroupfileset dir="${lib_dir}">
+				<include name="**/*.jar" />
+			</zipgroupfileset>
+		</jar>
+	</target>
+
+	<target name="build" depends="init">
+	</target>
+
+</project>
